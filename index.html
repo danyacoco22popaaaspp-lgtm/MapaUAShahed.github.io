@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МАПА ШАХЕДІВ</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+#map, #mapContainer {
+  height: 100%;
+  width: 100%;
+}
+
+.logo {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.95);
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  z-index: 1000;
+  transition: opacity 0.3s;
+}
+
+.controls {
+  position: fixed;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 1000;
+}
+
+.main-btn {
+  width: 80px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0,0,0,.25);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.group {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.sub-btn {
+  width: 80px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: #f7f7f7;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  padding-left: 4px;
+}
+
+.sub-btn img {
+  width: 16px;
+  height: 16px;
+}
+
+.clear-btn {
+  background: #000;
+  color: #fff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="logo" id="logoText">МАПА ШАХЕДІВ</div>
+
+<div id="map">
+  <div id="mapContainer"></div>
+
+  <!--  -->
+  <div class="controls" style="top:10px; right:8px; z-index:1001;">
+    <button class="main-btn" id="togglePanelTop" style="width:50px;height:24px;">А</button>
+  </div>
+
+  <!--  -->
+  <div class="controls" id="controlsPanel" style="top:50px; right:8px; z-index:1000;">
+
+    <!--  -->
+    <button class="main-btn" onclick="toggleGroup('uav')">БпЛА</button>
+    <div class="group" id="uav">
+      <button class="sub-btn" data-type="shahed"><img src="https://image2url.com/r2/default/images/1769876144192-e893bb54-146e-4d25-8095-795e489ec27b.png"> Shahed</button>
+      <button class="sub-btn" data-type="shahed238"><img src="https://image2url.com/r2/default/images/1769876435714-63e7816c-507f-4deb-a6dd-287a51d84b60.png"> Shahed-238</button>
+      <button class="sub-btn" data-type="molniya_uav"><img src="https://image2url.com/r2/default/images/1769865931930-f030be05-42e0-4bf3-b6f0-e3a6a30319d7.png"> Молнія</button>
+      <button class="sub-btn" data-type="zala"><img src="https://image2url.com/r2/default/images/1769866607142-afcdd360-ecda-4262-b039-d4bb7969d62f.png"> ZALA</button>
+      <button class="sub-btn" data-type="gerbera"><img src="https://image2url.com/r2/default/images/1769873035628-4f3813ed-c537-43ab-8ef6-166066f3f72f.png"> Гербера</button>
+    </div>
+
+    <!--  -->
+    <button class="main-btn" onclick="toggleGroup('missiles')">Ракети</button>
+    <div class="group" id="missiles">
+      <button class="sub-btn" data-type="x101"><img src="https://image2url.com/r2/default/images/1769819258646-298e5b0c-8c6c-4b97-a76f-d8a23787f129.png"> Х-101</button>
+      <button class="sub-btn" data-type="kr"><img src="https://image2url.com/r2/default/images/1769866656945-c61f75b7-a37a-4de4-ad40-3f4234c885a1.png"> КР</button>
+      <button class="sub-btn" data-type="kinzhal"><img src="https://image2url.com/r2/default/images/1769866797824-8cca767c-f89e-4b1b-b26a-7bca6f6a9ba4.png"> Кинжал</button>
+      <button class="sub-btn" data-type="ballistic"><img src="https://image2url.com/r2/default/images/1769866711002-81a14494-074e-4a52-9bec-9d42c3ea8e19.png"> Балистика</button>
+      <button class="sub-btn" data-type="iskander"><img src="https://image2url.com/r2/default/images/1769865857265-6f3cff5b-d796-44d2-ac25-059627b1a816.png"> Іскандер</button>
+      <button class="sub-btn" data-type="kab"><img src="https://image2url.com/r2/default/images/1769870791900-3d52f83c-5625-49d2-af80-25537e5970f5.png"> КАБ</button>
+      <button class="sub-btn" data-type="x5969"><img src="https://image2url.com/r2/default/images/1769873223018-ab607106-1178-4a4a-bb28-f3beb00c80cb.png"> Х-59/69</button>
+      <button class="sub-btn" data-type="x22"><img src="https://image2url.com/r2/default/images/1769873239516-549d2076-fa21-48fc-ab71-d1251936a012.png"> Х-22</button>
+    </div>
+
+    <!--  -->
+    <button class="main-btn" onclick="toggleGroup('air')">Страт / Авіа</button>
+    <div class="group" id="air">
+      <button class="sub-btn" data-type="tu160"><img src="https://image2url.com/r2/default/images/1769865901189-0bf3e163-beea-4f15-b021-5acd3278efe8.png"> Ту-160</button>
+      <button class="sub-btn" data-type="su34"><img src="https://image2url.com/r2/default/images/1769870812595-347659e8-df22-4f45-8e49-9a6e2a4923b9.png"> СУ-34</button>
+      <button class="sub-btn" data-type="tu95ms"><img src="https://image2url.com/r2/default/images/1769873099537-2e989e4a-4e8d-4036-a7d9-e3a14dbe49bf.png"> Ту-95МС</button>
+      <button class="sub-btn" data-type="tu22m3"><img src="https://image2url.com/r2/default/images/1769873324266-facd742f-fa00-4dca-b31e-1aafccc016f1.png"> ТУ-22М3</button>
+    </div>
+
+    <!--  -->
+    <button class="main-btn" onclick="toggleGroup('ships')">Кораблі</button>
+    <div class="group" id="ships">
+      <button class="sub-btn" data-type="varshavyanka"><img src="https://image2url.com/r2/default/images/1769869316158-7efaeb59-d247-47d1-b6d0-217b34228c2c.png"> Варшавянка</button>
+      <button class="sub-btn" data-type="submarine"><img src="https://image2url.com/r2/default/images/1769869354475-5dc60515-2d39-4e10-b790-e79a40bd73e4.png"> Підводна лодка</button>
+    </div>
+
+    <button class="main-btn clear-btn" id="clearBtn">Очистити</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://rawcdn.githack.com/bbecquet/Leaflet.RotatedMarker/master/leaflet.rotatedMarker.js"></script>
+
+<script>
+const map = L.map('mapContainer').setView([48.5, 32.3], 6);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+function toggleGroup(id) {
+  document.querySelectorAll('.group').forEach(g => {
+    if (g.id !== id) g.style.display = 'none';
+  });
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'flex' ? 'none' : 'flex';
+}
+
+const icons = {
+  shahed: ['https://image2url.com/r2/default/images/1769876144192-e893bb54-146e-4d25-8095-795e489ec27b.png', 13],
+  shahed238: ['https://image2url.com/r2/default/images/1769876435714-63e7816c-507f-4deb-a6dd-287a51d84b60.png', 22],
+  molniya_uav: ['https://image2url.com/r2/default/images/1769865931930-f030be05-42e0-4bf3-b6f0-e3a6a30319d7.png', 28],
+  zala: ['https://image2url.com/r2/default/images/1769866607142-afcdd360-ecda-4262-b039-d4bb7969d62f.png', 27],
+  gerbera: ['https://image2url.com/r2/default/images/1769873035628-4f3813ed-c537-43ab-8ef6-166066f3f72f.png', 24],
+  x101: ['https://image2url.com/r2/default/images/1769819258646-298e5b0c-8c6c-4b97-a76f-d8a23787f129.png', 26],
+  kr: ['https://image2url.com/r2/default/images/1769866656945-c61f75b7-a37a-4de4-ad40-3f4234c885a1.png', 26],
+  kinzhal: ['https://image2url.com/r2/default/images/1769866797824-8cca767c-f89e-4b1b-b26a-7bca6f6a9ba4.png', 26],
+  ballistic: ['https://image2url.com/r2/default/images/1769866711002-81a14494-074e-4a52-9bec-9d42c3ea8e19.png', 26],
+  iskander: ['https://image2url.com/r2/default/images/1769865857265-6f3cff5b-d796-44d2-ac25-059627b1a816.png', 26],
+  kab: ['https://image2url.com/r2/default/images/1769870791900-3d52f83c-5625-49d2-af80-25537e5970f5.png', 26],
+  x5969: ['https://image2url.com/r2/default/images/1769873223018-ab607106-1178-4a4a-bb28-f3beb00c80cb.png', 26],
+  x22: ['https://image2url.com/r2/default/images/1769873239516-549d2076-fa21-48fc-ab71-d1251936a012.png', 26],
+  tu160: ['https://image2url.com/r2/default/images/1769865901189-0bf3e163-beea-4f15-b021-5acd3278efe8.png', 30],
+  su34: ['https://image2url.com/r2/default/images/1769870812595-347659e8-df22-4f45-8e49-9a6e2a4923b9.png', 28],
+  tu95ms: ['https://image2url.com/r2/default/images/1769873099537-2e989e4a-4e8d-4036-a7d9-e3a14dbe49bf.png', 28],
+  tu22m3: ['https://image2url.com/r2/default/images/1769873324266-facd742f-fa00-4dca-b31e-1aafccc016f1.png', 28],
+  varshavyanka: ['https://image2url.com/r2/default/images/1769869316158-7efaeb59-d247-47d1-b6d0-217b34228c2c.png', 36],
+  submarine: ['https://image2url.com/r2/default/images/1769869354475-5dc60515-2d39-4e10-b790-e79a40bd73e4.png', 36]
+};
+
+let placing=false, marker=null, currentIcon=null, markers=[];
+
+let iskanderCircles = []; // массив радиусов Искандера
+
+document.getElementById('togglePanelTop').onclick = ()=>{
+  const panel=document.getElementById('controlsPanel');
+  const logo=document.getElementById('logoText');
+  if(panel.style.display==='none'||panel.style.display===''){
+    panel.style.display='flex';
+    logo.style.opacity=1;
+  }else{
+    panel.style.display='none';
+    logo.style.opacity=0;
+  }
+};
+
+document.querySelectorAll('.sub-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    const [url,size]=icons[btn.dataset.type];
+    currentIcon=L.icon({iconUrl:url,iconSize:[size,size],iconAnchor:[size/2,size/2]});
+    placing=true;
+    marker=null;
+  };
+});
+
+document.getElementById('clearBtn').onclick=()=>{
+  markers.forEach(m=>map.removeLayer(m));
+  markers=[];
+  // убрать все круги Искандера
+  iskanderCircles.forEach(c=>map.removeLayer(c));
+  iskanderCircles=[];
+};
+
+map.on('click',e=>{
+  if(!placing) return;
+  const currentType=Object.keys(icons).find(k=>icons[k][0]===currentIcon.options.iconUrl);
+  let newMarker;
+
+  if(currentType==='iskander'){
+    let radiusKm=parseFloat(prompt("Введіть радіус дії Іскандера (км):","10"));
+    if(!isNaN(radiusKm)&&radiusKm>0){
+      newMarker=L.marker(e.latlng,{icon:currentIcon}).addTo(map);
+      markers.push(newMarker);
+      const circle=L.circle(e.latlng,{radius:radiusKm*1000,color:'red',fillColor:'red',fillOpacity:0.2}).addTo(map);
+      iskanderCircles.push(circle);
+    }
+    placing=false;
+    return;
+  }
+
+  if(currentType==='varshavyanka'||currentType==='submarine'){
+    newMarker=L.marker(e.latlng,{icon:currentIcon}).addTo(map);
+    markers.push(newMarker);
+    placing=false;
+    return;
+  }
+
+  // Повороты для остальных
+  if(!marker){
+    marker=L.marker(e.latlng,{icon:currentIcon,rotationAngle:0,rotationOrigin:'center'}).addTo(map);
+    markers.push(marker);
+  }else{
+    const a=marker.getLatLng(), b=e.latlng;
+    const angle=Math.atan2(b.lng-a.lng,b.lat-a.lat)*180/Math.PI;
+    marker.setRotationAngle(angle);
+    placing=false;
+    marker=null;
+  }
+});
+</script>
+</body>
+</html>. 
